@@ -3,13 +3,18 @@ package q4statepattern;
 public class DisabledState implements State {
 
 	@Override
-	public void doAction(Context context) {
-		System.out.println("Disabled State");
+	public boolean doAction(Context context, String in) {
+		if (in.equals("d")) {
+			context.setState(context.unknown);
+			return true;
+		}
+
+		return false;
 	}
 	
 	@Override
-	public boolean isEquals(State state) {
-		return state.getClass().getName().equals(this.getClass().getName());
+	public String toString() {
+		return "Disabled State";
 	}
 
 }

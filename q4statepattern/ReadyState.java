@@ -3,14 +3,22 @@ package q4statepattern;
 public class ReadyState implements State {
 	
 	@Override
-	public void doAction(Context context) {
-		System.out.println("Ready State");
-		context.setState(this);
+	public boolean doAction(Context context, String in) {
+		if (in.equals("e")) {
+			context.setState(context.disabled);
+			return true;
+		}
+		else if (in.equals("c")) {
+			context.setState(context.unknown);
+			return true;
+		}
+
+		return false;
 	}
 	
 	@Override
-	public boolean isEquals(State state) {
-		return state.getClass().getName().equals(this.getClass().getName());
+	public String toString() {
+		return "Ready State";
 	}
 
 }

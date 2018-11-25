@@ -3,14 +3,22 @@ package q4statepattern;
 public class UnknownState implements State {
 
 	@Override
-	public void doAction(Context context) {
-		System.out.println("Unknown State");
-		context.setState(this);
+	public boolean doAction(Context context, String in) {
+		if (in.equals("b") || in.equals("c")) {
+			context.setState(context.down);
+			return true;
+		}
+		else if (in.equals("a")) {
+			context.setState(context.ready);
+			return true;
+		}
+
+		return false;
 	}
 	
 	@Override
-	public boolean isEquals(State state) {
-		return state.getClass().getName().equals(this.getClass().getName());
+	public String toString() {
+		return "Unknown State";
 	}
 
 }

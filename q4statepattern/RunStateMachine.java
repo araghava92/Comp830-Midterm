@@ -17,19 +17,20 @@ public class RunStateMachine {
 		transitions.put("f", "Quit");
 		
 		Context context = new Context();
-		State ready = new ReadyState();
-		State unknown = new UnknownState();
-		State disabled = new DisabledState();
-		State down = new DownState();
-
-		unknown.doAction(context);
+		context.setState(context.unknown);
+		boolean stateChanged = true;
 		
 		Scanner scanner = new Scanner(System.in);
 		boolean keepRunning = true;
 		String input;
-		boolean stateChanged = false;
 		
 		while(keepRunning) {
+			if (stateChanged) {
+				System.out.print(String.format("Current State is %s\n", context.currentState.toString()));
+			} else {
+				System.out.println("No state change\n");
+			}
+			
 			stateChanged = false;
 			printTransitions(transitions);
 
@@ -37,38 +38,9 @@ public class RunStateMachine {
 			input = scanner.nextLine();
 			
 			switch (input) {
-				case "a":
-					if (context.getState().equals(down) || context.getState().equals(unknown)) {
-						context.setState(ready);
-						stateChanged = true;
-					}
-					break;
-				case "b":
-					if (context.getState().equals(ready) || context.getState().equals(unknown)) {
-						context.setState(down);
-						stateChanged = true;
-					}
-					break;
-				case "c":
-					if (context.getState().equals(ready)) {
-						context.setState(unknown);
-						stateChanged = true;
-					} else if (context.getState().isEquals(unknown)) {
-						context.setState(down);
-						stateChanged = true;
-					}
-					break;
-				case "d":
-					if (context.getState().equals(disabled)) {
-						context.setState(unknown);
-						stateChanged = true;
-					}
-					break;
-				case "e":
-					if (context.getState().isEquals(ready)) {
-						context.setState(disabled);
-						stateChanged = true;
-					}
+				case "a": case "b": case "c": 
+				case "d": case "e":
+					stateChanged = context.doAction(input);
 					break;
 				case "f":
 					keepRunning = false;
@@ -79,13 +51,6 @@ public class RunStateMachine {
 					continue;
 			}
 			System.out.println(String.format("\nChosen >%s<", transitions.get(input)));
-			if (stateChanged) {
-				System.out.print("New State is ");
-				context.doAction();
-				System.out.println("");
-			} else {
-				System.out.println("No state change\n");
-			}
 		}
 		scanner.close();
 	}
